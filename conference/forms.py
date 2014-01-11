@@ -9,6 +9,7 @@ from django.forms.util import flatatt
 from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
+from django.contrib.admin.util import label_for_field, help_text_for_field
 
 from conference import models
 from conference import settings
@@ -254,8 +255,8 @@ _abstract = models.Talk._meta.get_field_by_name('abstracts')[0]
 class TalkForm(forms.ModelForm):
     abstract = forms.CharField(
         max_length=5000,
-        label=_abstract.verbose_name,
-        help_text=_abstract.help_text,
+        label=label_for_field('abstracts', models.Talk),
+        help_text=help_text_for_field('abstracts', models.Talk),
         widget=forms.Textarea(),)
 
     class Meta:
