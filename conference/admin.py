@@ -270,6 +270,7 @@ class DeadlineAdmin(admin.ModelAdmin):
     # istanze di DeadlineContent in funzione delle lingue.
 
     def get_form(self, request, obj=None, **kwargs):
+        kwargs.setdefault('fields', None)
         form = super(DeadlineAdmin, self).get_form(request, obj, **kwargs)
         if obj:
             contents = dict((c.language, (c.headline, c.body)) for c in obj.deadlinecontent_set.all())
@@ -323,7 +324,9 @@ class MultiLingualAdminContent(admin.ModelAdmin):
                 if f.field.related.parent_model is models.MultilingualContent:
                     yield name
 
+
     def get_form(self, request, obj=None, **kwargs):
+        kwargs.setdefault('fields', None)
         form = super(MultiLingualAdminContent, self).get_form(request, obj, **kwargs)
         for field_name in self._get_relation_field():
             if obj:
@@ -378,7 +381,7 @@ class TalkSpeakerInlineAdminForm(forms.ModelForm):
 
     def clean_speaker(self):
         data = self.cleaned_data
-        return models.Speaker.objects.get(user=data['speaker'])
+        return models.Speaker.objects.get_or_create(pk=data['speaker'].pk)[0]
 
 class TalkSpeakerInlineAdmin(admin.TabularInline):
     model = models.TalkSpeaker
@@ -457,7 +460,7 @@ class SpeakerAdmin(MultiLingualAdminContent):
         except models.AttendeeProfile.DoesNotExist:
             img = None
         if not img:
-            return '<div style="height: 32px; width: 32px"> </div>' 
+            return '<div style="height: 32px; width: 32px"> </div>'
         return '<img src="%s" height="32" />' % (img.url,)
     _avatar.allow_tags = True
 
