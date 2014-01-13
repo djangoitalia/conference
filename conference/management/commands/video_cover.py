@@ -1,13 +1,15 @@
 # -*- coding: UTF-8 -*-
 from django.core.management.base import BaseCommand, CommandError
-from conference import dataaccess
-from conference import settings
-from conference.utils import render_event_video_cover
+
 
 class Command(BaseCommand):
     """
     """
     def handle(self, *args, **options):
+        from conference import dataaccess
+        from conference import settings
+        from conference.utils import render_event_video_cover
+
         try:
             conference = args[0]
         except IndexError:

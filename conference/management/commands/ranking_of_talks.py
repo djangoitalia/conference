@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.core.management.base import BaseCommand, CommandError
-from conference import models
-from conference import utils
 
 from collections import defaultdict
 from optparse import make_option
@@ -23,6 +21,8 @@ class Command(BaseCommand):
         ),
     )
     def handle(self, *args, **options):
+        from conference import models
+        from conference import utils
         try:
             conference = args[0]
         except IndexError:

@@ -5,9 +5,6 @@ from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Q
 
-from conference import settings
-from conference import utils
-
 class Command(BaseCommand):
     """
     """
@@ -44,6 +41,9 @@ class Command(BaseCommand):
         ),
     )
     def handle(self, *args, **options):
+        from conference import settings
+        from conference import utils
+
         try:
             conference = args[0]
         except IndexError:
