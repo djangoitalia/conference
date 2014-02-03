@@ -6,8 +6,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    no_dry_run = True
+
     def forwards(self, orm):
-        
+
         ct = orm['contenttypes.ContentType'].objects.get(app_label='conference', model='attendeeprofile')
         for mc in orm.MultilingualContent.objects.filter(content_type=ct):
             uid = db.execute('select user_id from conference_attendeeprofile where id=%s', [mc.object_id])[0][0]

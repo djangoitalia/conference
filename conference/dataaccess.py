@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 from conference import cachef
 from conference import models
-from pages.models import Page
+from cms.models import Page
 
 from collections import defaultdict
 from datetime import datetime, timedelta
