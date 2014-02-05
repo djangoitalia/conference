@@ -1,4 +1,4 @@
-{% load conference tagging_tags %}
+{% load conference %}
 <html>
 <body>
     <h1>Talks report - conference: {{ conference }}, tags: {{ tags }}</h1>
@@ -19,7 +19,6 @@
                 {% endif %}
                 {% endwith %}
             </td>
-            {% tags_for_object t as to %}
             <td>{{ to|join:", " }}</td>
         </tr>
         {% endfor %}
