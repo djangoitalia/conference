@@ -32,11 +32,9 @@ def _dump_fields(o):
     return output
 
 def navigation(lang, page_type):
-    pages = []
+    pages = []#.filter(tags__name=page_type)\.filter(content__language=lang, content__type='slug')\
     qs = Page.objects\
         .published()\
-        .filter(tags__name=page_type)\
-        .filter(content__language=lang, content__type='slug')\
         .distinct()\
         .order_by('tree_id', 'lft')
     for p in qs:
@@ -55,7 +53,7 @@ def _i_navigation(sender, **kw):
         if not isinstance(item.content_object, Page):
             return []
         page = item.content_object
-    tags = page.tags.all().values_list('name', flat=True)
+    tags = []#page.tags.all().values_list('name', flat=True)
     languages = page.get_languages()
     return [ 'nav:%s:%s' % (l, t) for l in languages for t in tags ]
 
