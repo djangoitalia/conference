@@ -1440,11 +1440,22 @@ olark.identify('%s');/*]]>{/literal}*/</script>
     user = context['request'].user
     if user.is_authenticated():
         from django.template.defaultfilters import escapejs
-        name = '%s %s' % (user.first_name, user.last_name)
+        name = escapejs('%s %s') % (user.first_name, user.last_name)
+        email = user.email
+        try:
+            phone = user.attendeeprofile.phone
+        except:
+            phone = ''
         blob += '''
 <script type="text/javascript">
-    olark('api.chat.updateVisitorNickname', {snippet: '%s'})</script>
-''' % (escapejs(name),)
+    olark('api.chat.updateVisitorNickname', {snippet: '%s', hidesDefault: true});
+    olark('api.visitor.updateFullName', {fullName: '%s'});
+    %s
+    %s
+</script>
+''' % (name, name,
+       "olark('api.visitor.updateEmailAddress', {emailAddress: '%s'});" % escapejs(email) if email else "",
+       "olark('api.visitor.updatePhoneNumber', {phoneNumber: '%s'});" % escapejs(phone) if phone else "")
 
     return blob
 
