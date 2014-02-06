@@ -18,15 +18,12 @@ from django.utils.translation import ugettext as _
 
 from django_urls import UrlMixin
 
-import tagging
-from tagging.fields import TagField
-
 import conference
 import conference.gmap
 from conference import settings
 from conference import signals
 
-from taggit.models import TagBase, GenericTaggedItemBase, ItemBase
+from taggit.models import TagBase, GenericTaggedItemBase, ItemBase, Tag
 from taggit.managers import TaggableManager
 
 # ConferenceTag e ConferenceTaggedItem servono per creare un "namespace" per i
@@ -778,7 +775,7 @@ class SponsorIncome(models.Model):
     sponsor = models.ForeignKey(Sponsor)
     conference = models.CharField(max_length=20)
     income = models.PositiveIntegerField()
-    tags = TagField()
+    tags = models.CharField(max_length=400)
 
     class Meta:
         ordering = ['conference']
@@ -807,7 +804,7 @@ post_save.connect(postSaveResizeImageHandler, sender=MediaPartner)
 class MediaPartnerConference(models.Model):
     partner = models.ForeignKey(MediaPartner)
     conference = models.CharField(max_length = 20)
-    tags = TagField()
+    tags = models.CharField(max_length=400)
 
     class Meta:
         ordering = ['conference']
@@ -1064,8 +1061,8 @@ class Event(models.Model):
             return self.custom
 
     def get_all_tracks_names(self):
-        from tagging.utils import parse_tag_input
-        return parse_tag_input(self.track)
+        from taggit.utils import parse_tags
+        return parse_tags(self.track)
 
     def get_track(self):
         """
@@ -1074,7 +1071,7 @@ class Event(models.Model):
         """
         # XXX: utilizzare il template tag get_event_track che cacha la query 
         dbtracks = dict( (t.track, t) for t in self.schedule.track_set.all())
-        for t in tagging.models.Tag.objects.get_for_object(self):
+        for t in Tag.objects.get_for_object(self):
             if t.name in dbtracks:
                 return dbtracks[t.name]
 

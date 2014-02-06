@@ -89,7 +89,7 @@ class Migration(SchemaMigration):
             'sponsor': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['conference.Sponsor']", 'null': 'True', 'blank': 'True'}),
             'start_time': ('django.db.models.fields.TimeField', [], {}),
             'talk': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['conference.Talk']", 'null': 'True', 'blank': 'True'}),
-            'track': ('tagging.fields.TagField', [], {})
+            'track': ('django.db.models.fields.CharField', [], {'max_length': '400'})
         },
         'conference.fare': {
             'Meta': {'ordering': "('conference', 'code')", 'unique_together': "(('conference', 'code'),)", 'object_name': 'Fare'},
@@ -134,7 +134,7 @@ class Migration(SchemaMigration):
             'conference': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['conference.MediaPartner']"}),
-            'tags': ('tagging.fields.TagField', [], {})
+            'tags': ('django.db.models.fields.CharField', [], {'max_length': '400'})
         },
         'conference.multilingualcontent': {
             'Meta': {'object_name': 'MultilingualContent'},
@@ -209,7 +209,7 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'income': ('django.db.models.fields.PositiveIntegerField', [], {}),
             'sponsor': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['conference.Sponsor']"}),
-            'tags': ('tagging.fields.TagField', [], {})
+            'tags': ('django.db.models.fields.CharField', [], {'max_length': '400'})
         },
         'conference.talk': {
             'Meta': {'ordering': "['title']", 'object_name': 'Talk'},
@@ -226,7 +226,7 @@ class Migration(SchemaMigration):
             'speakers': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['conference.Speaker']", 'symmetrical': 'False'}),
             'status': ('django.db.models.fields.CharField', [], {'max_length': '8'}),
             'suggested_tags': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-            'tags': ('tagging.fields.TagField', [], {}),
+            'tags': ('django.db.models.fields.CharField', [], {'max_length': '400'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'training_available': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'type': ('django.db.models.fields.CharField', [], {'default': "'s'", 'max_length': '1'}),

@@ -8,13 +8,13 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         "Write your forwards methods here."
-        from tagging.utils import parse_tag_input
+        from taggit.utils import parse_tags
         from django.template.defaultfilters import slugify
 
         ct = orm['contenttypes.contenttype'].objects.get(app_label='conference', model='talk')
         for c in orm.Talk.objects.exclude(tags=''):
             tags = []
-            for t in parse_tag_input(c.tags):
+            for t in parse_tags(c.tags):
                 try:
                     tag = orm['taggit.tag'].objects.get(name=t)
                 except orm['taggit.tag'].DoesNotExist:
@@ -100,7 +100,7 @@ class Migration(DataMigration):
             'sponsor': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['conference.Sponsor']", 'null': 'True', 'blank': 'True'}),
             'start_time': ('django.db.models.fields.TimeField', [], {}),
             'talk': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['conference.Talk']", 'null': 'True', 'blank': 'True'}),
-            'track': ('tagging.fields.TagField', [], {})
+            'track': ('django.db.models.fields.CharField', [], {'max_length': '400'})
         },
         'conference.eventinterest': {
             'Meta': {'unique_together': "(('user', 'event'),)", 'object_name': 'EventInterest'},
@@ -154,7 +154,7 @@ class Migration(DataMigration):
             'conference': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['conference.MediaPartner']"}),
-            'tags': ('tagging.fields.TagField', [], {})
+            'tags': ('django.db.models.fields.CharField', [], {'max_length': '400'})
         },
         'conference.multilingualcontent': {
             'Meta': {'object_name': 'MultilingualContent'},
@@ -232,7 +232,7 @@ class Migration(DataMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'income': ('django.db.models.fields.PositiveIntegerField', [], {}),
             'sponsor': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['conference.Sponsor']"}),
-            'tags': ('tagging.fields.TagField', [], {})
+            'tags': ('django.db.models.fields.CharField', [], {'max_length': '400'})
         },
         'conference.talk': {
             'Meta': {'ordering': "['title']", 'object_name': 'Talk'},
@@ -248,7 +248,7 @@ class Migration(DataMigration):
             'speakers': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['conference.Speaker']", 'through': "orm['conference.TalkSpeaker']", 'symmetrical': 'False'}),
             'status': ('django.db.models.fields.CharField', [], {'max_length': '8'}),
             'suggested_tags': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-            'tags': ('tagging.fields.TagField', [], {}),
+            'tags': ('django.db.models.fields.CharField', [], {'max_length': '400'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'training_available': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'type': ('django.db.models.fields.CharField', [], {'default': "'s'", 'max_length': '1'}),

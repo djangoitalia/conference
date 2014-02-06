@@ -62,7 +62,7 @@ class Migration(SchemaMigration):
             ('video_type', self.gf('django.db.models.fields.CharField')(max_length=30, blank=True)),
             ('video_url', self.gf('django.db.models.fields.TextField')(blank=True)),
             ('video_file', self.gf('django.db.models.fields.files.FileField')(max_length=100, blank=True)),
-            ('tags', self.gf('tagging.fields.TagField')()),
+            ('tags', self.gf('django.db.models.fields.CharField')(max_length=400)),
         ))
         db.send_create_signal('conference', ['Talk'])
 
@@ -98,7 +98,7 @@ class Migration(SchemaMigration):
             ('sponsor', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['conference.Sponsor'])),
             ('conference', self.gf('django.db.models.fields.CharField')(max_length=20)),
             ('income', self.gf('django.db.models.fields.PositiveIntegerField')()),
-            ('tags', self.gf('tagging.fields.TagField')()),
+            ('tags', self.gf('django.db.models.fields.CharField')(max_length=400)),
         ))
         db.send_create_signal('conference', ['SponsorIncome'])
 
@@ -117,7 +117,7 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('partner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['conference.MediaPartner'])),
             ('conference', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('tags', self.gf('tagging.fields.TagField')()),
+            ('tags', self.gf('django.db.models.fields.CharField')(max_length=400)),
         ))
         db.send_create_signal('conference', ['MediaPartnerConference'])
 
@@ -148,7 +148,7 @@ class Migration(SchemaMigration):
             ('talk', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['conference.Talk'], null=True, blank=True)),
             ('custom', self.gf('django.db.models.fields.TextField')(blank=True)),
             ('start_time', self.gf('django.db.models.fields.TimeField')()),
-            ('track', self.gf('tagging.fields.TagField')()),
+            ('track', self.gf('django.db.models.fields.CharField')(max_length=400)),
             ('sponsor', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['conference.Sponsor'], null=True, blank=True)),
         ))
         db.send_create_signal('conference', ['Event'])
@@ -271,7 +271,7 @@ class Migration(SchemaMigration):
             'sponsor': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['conference.Sponsor']", 'null': 'True', 'blank': 'True'}),
             'start_time': ('django.db.models.fields.TimeField', [], {}),
             'talk': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['conference.Talk']", 'null': 'True', 'blank': 'True'}),
-            'track': ('tagging.fields.TagField', [], {})
+            'track': ('django.db.models.fields.CharField', [], {'max_length': '400'}),
         },
         'conference.hotel': {
             'Meta': {'ordering': "['name']", 'object_name': 'Hotel'},
@@ -303,7 +303,7 @@ class Migration(SchemaMigration):
             'conference': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['conference.MediaPartner']"}),
-            'tags': ('tagging.fields.TagField', [], {})
+            'tags': ('django.db.models.fields.CharField', [], {'max_length': '400'}),
         },
         'conference.multilingualcontent': {
             'Meta': {'object_name': 'MultilingualContent'},
@@ -357,7 +357,7 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'income': ('django.db.models.fields.PositiveIntegerField', [], {}),
             'sponsor': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['conference.Sponsor']"}),
-            'tags': ('tagging.fields.TagField', [], {})
+            'tags': ('django.db.models.fields.CharField', [], {'max_length': '400'}),
         },
         'conference.talk': {
             'Meta': {'ordering': "['title']", 'object_name': 'Talk'},
@@ -369,7 +369,7 @@ class Migration(SchemaMigration):
             'slides': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'blank': 'True'}),
             'slug': ('django.db.models.fields.SlugField', [], {'max_length': '50', 'db_index': 'True'}),
             'speakers': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['conference.Speaker']", 'symmetrical': 'False'}),
-            'tags': ('tagging.fields.TagField', [], {}),
+            'tags': ('django.db.models.fields.CharField', [], {'max_length': '400'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'video_file': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'blank': 'True'}),
             'video_type': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),

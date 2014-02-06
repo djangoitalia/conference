@@ -29,8 +29,8 @@ from conference.utils import TimeTable
 
 PAGE_DEFAULT_LANGUAGE='it'
 
-from tagging.models import Tag, TaggedItem
-from tagging.utils import parse_tag_input
+from taggit.models import Tag, TaggedItem
+from taggit.utils import parse_tags
 
 from fancy_tag import fancy_tag
 
@@ -465,7 +465,7 @@ def schedule_timetable(context, schedule, start=None, end=None):
             duration = e.duration
         else:
             duration = e.talk.duration if e.talk else None
-        event_tracks = set(parse_tag_input(e.track))
+        event_tracks = set(parse_tags(e.track))
         rows = [ x for x in tracks if x.track in event_tracks ]
         if ('break' in event_tracks or 'special' in event_tracks) and not rows:
             rows = list(t for t in tracks if not t.outdoor)
@@ -546,13 +546,13 @@ def get_event_track(context, event):
     se è di tipo speciale
     """
     dbtracks = dict((t.track, t) for t in models.Track.objects.by_schedule(event.schedule))
-    for t in set(parse_tag_input(event.track)):
+    for t in set(parse_tags(event.track)):
         if t in dbtracks:
             return dbtracks[t]
 
 @register.filter
 def event_has_track(event, track):
-    return track in set(parse_tag_input(event.track))
+    return track in set(parse_tags(event.track))
 
 @fancy_tag(register)
 def event_row_span(timetable, event):
@@ -822,7 +822,7 @@ def conference_hotels(parser, token):
                 context[self.var_name] = query
                 return ''
             else:
-                return value
+                return var_name
     return HotelsNode(var_name)
 
 @register.inclusion_tag('conference/render_hotels.html')

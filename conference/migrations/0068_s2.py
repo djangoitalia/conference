@@ -114,7 +114,7 @@ class Migration(DataMigration):
             'sponsor': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['conference.Sponsor']", 'null': 'True', 'blank': 'True'}),
             'start_time': ('django.db.models.fields.TimeField', [], {}),
             'talk': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['conference.Talk']", 'null': 'True', 'blank': 'True'}),
-            'track': ('tagging.fields.TagField', [], {}),
+            'track': ('django.db.models.fields.CharField', [], {'max_length': '400'}),
             'tracks': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['conference.Track']", 'through': "orm['conference.EventTrack']", 'symmetrical': 'False'}),
             'video': ('django.db.models.fields.CharField', [], {'max_length': '1000', 'blank': 'True'})
         },
@@ -176,7 +176,7 @@ class Migration(DataMigration):
             'conference': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['conference.MediaPartner']"}),
-            'tags': ('tagging.fields.TagField', [], {})
+            'tags': ('django.db.models.fields.CharField', [], {'max_length': '400'})
         },
         'conference.multilingualcontent': {
             'Meta': {'object_name': 'MultilingualContent'},
@@ -238,7 +238,7 @@ class Migration(DataMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'income': ('django.db.models.fields.PositiveIntegerField', [], {}),
             'sponsor': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['conference.Sponsor']"}),
-            'tags': ('tagging.fields.TagField', [], {})
+            'tags': ('django.db.models.fields.CharField', [], {'max_length': '400'})
         },
         'conference.talk': {
             'Meta': {'ordering': "['title']", 'object_name': 'Talk'},

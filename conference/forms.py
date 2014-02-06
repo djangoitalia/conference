@@ -299,8 +299,8 @@ class TalkForm(forms.ModelForm):
 
 del _abstract
 
-from tagging.models import TaggedItem
-from tagging.utils import parse_tag_input
+from taggit.models import TaggedItem
+from taggit.utils import parse_tags
 
 class TrackForm(forms.ModelForm):
     class Meta:
