@@ -40,8 +40,8 @@ def navigation(lang, page_type):
     for p in qs:
         pages.append({
             'url': p.get_absolute_url(language=lang),
-            'slug': p.slug(language=lang),
-            'title': p.title(language=lang),
+            'slug': p.get_slug(language=lang),
+            'title': p.get_title(language=lang),
         })
     return pages
 
@@ -58,7 +58,7 @@ def _i_navigation(sender, **kw):
     return [ 'nav:%s:%s' % (l, t) for l in languages for t in tags ]
 
 navigation = cache_me(
-    models=(Page,TaggedItem),
+    models=(Page,),
     key='nav:%(lang)s:%(page_type)s')(navigation, _i_navigation)
 
 def _i_deadlines(sender, **kw):
@@ -103,14 +103,6 @@ def sponsor(conf):
         .order_by('-income', 'sponsor__sponsor')
     output = []
     tags = defaultdict(set)
-    from tagging.models import TaggedItem
-    for r in TaggedItem.objects\
-                .filter(
-                    content_type=ContentType.objects.get_for_model(models.SponsorIncome),
-                    object_id__in=qs.values('id')
-                )\
-                .values('object_id', 'tag__name'):
-        tags[r['object_id']].add(r['tag__name'])
     for i in qs:
         data = _dump_fields(i.sponsor)
         data.update({
