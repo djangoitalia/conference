@@ -113,7 +113,7 @@ def speaker_access(f):
     decoratore che protegge la view relativa ad uno speaker.
     """
     def wrapper(request, slug, **kwargs):
-        spk = get_object_or_404(models.Speaker, slug=slug)
+        spk = get_object_or_404(models.Speaker, user__attendeeprofile__slug=slug)
         if request.user.is_staff or request.user == spk.user:
             full_access = True
             talks = spk.talks()
@@ -136,39 +136,6 @@ def speaker_access(f):
         return f(request, slug, speaker=spk, talks=talks, full_access=full_access, **kwargs)
     return wrapper
 
-@render_to('conference/speaker.html')
-@speaker_access
-def speaker(request, slug, speaker, talks, full_access, speaker_form=SpeakerForm):
-    if request.method == 'POST':
-        if not full_access:
-            return http.HttpResponseBadRequest()
-        form = speaker_form(data=request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            speaker.activity = data['activity']
-            speaker.activity_homepage = data['activity_homepage']
-            speaker.industry = data['industry']
-            speaker.company = data['company']
-            speaker.company_homepage = data['company_homepage']
-            speaker.save()
-            speaker.setBio(data['bio'])
-            return HttpResponseRedirectSeeOther(reverse('conference-speaker', kwargs={'slug': speaker.slug}))
-    else:
-        form = speaker_form(initial={
-            'activity': speaker.activity,
-            'activity_homepage': speaker.activity_homepage,
-            'industry': speaker.industry,
-            'company': speaker.company,
-            'company_homepage': speaker.company_homepage,
-            'bio': getattr(speaker.getBio(), 'body', ''),
-        })
-    return {
-        'form': form,
-        'full_access': full_access,
-        'speaker': speaker,
-        'talks': talks,
-        'accepted': talks.filter(status='accepted'),
-    }
 
 @speaker_access
 @render_to('conference/speaker.xml')
@@ -834,64 +801,6 @@ def covers(request, conference):
         'events': ordered,
     }
     return render(request, 'conference/covers.html', ctx)
-
-@login_required
-def user_profile_link(request, uuid):
-    """
-    """
-    profile = get_object_or_404(models.AttendeeProfile, uuid=uuid).user_id
-    conf = models.Conference.objects.current()
-    active = conf.conference() or 1
-    if request.user.id == profile:
-        if active:
-            p, _ = models.Presence.objects.get_or_create(profile_id=profile, conference=conf.code)
-        return redirect('conference-myself-profile')
-
-    uid = request.user.id
-    created = linked = False
-    try:
-        link = models.AttendeeLink.objects.getLink(uid, profile)
-        linked = True
-    except models.AttendeeLink.DoesNotExist:
-        if active:
-            link = models.AttendeeLink(attendee1_id=uid, attendee2_id=profile)
-            link.save()
-
-            from conference.signals import attendees_connected
-            attendees_connected.send(link, attendee1=uid, attendee2=profile)
-
-            created = True
-            linked = True
-    form = AttendeeLinkDescriptionForm(initial={
-        'message': link.message,
-    })
-    ctx = {
-        'profile2': profile,
-        'created': created,
-        'linked': linked,
-        'form': form,
-    }
-    return render(request, 'conference/profile_link.html', ctx)
-
-@login_required
-@json
-def user_profile_link_message(request, uuid):
-    profile = get_object_or_404(models.AttendeeProfile, uuid=uuid).user_id
-    uid = request.user.id
-    if uid == profile:
-        return {}
-
-    try:
-        link = models.AttendeeLink.objects.getLink(uid, profile)
-    except models.AttendeeLink.DoesNotExist:
-        raise http.Http404()
-
-    if request.method == 'POST':
-        form = AttendeeLinkDescriptionForm(data=request.POST)
-        if form.is_valid():
-            link.message = form.cleaned_data['message']
-            link.save()
-    return {}
 
 @login_required
 def user_conferences(request):
