@@ -624,6 +624,9 @@ class TalkSpeaker(models.Model):
     class Meta:
         unique_together = (('talk', 'speaker'),)
 
+    def __unicode__(self):
+        return unicode(self.speaker)
+
 class FareManager(models.Manager):
     def get_query_set(self):
         return self._QuerySet(self.model)

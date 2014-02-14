@@ -381,7 +381,7 @@ class TalkSpeakerInlineAdminForm(forms.ModelForm):
 
     def clean_speaker(self):
         data = self.cleaned_data
-        return models.Speaker.objects.get_or_create(pk=data['speaker'].pk)[0]
+        return models.Speaker.objects.get_or_create(pk=data['speaker'])[0]
 
 class TalkSpeakerInlineAdmin(admin.TabularInline):
     model = models.TalkSpeaker
