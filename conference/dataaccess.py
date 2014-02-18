@@ -265,27 +265,29 @@ talk_data = cache_me(
 def talks_data(tids):
     cached = zip(tids, talk_data.get_from_cache([ (x,) for x in tids ]))
     missing = [ x[0] for x in cached if x[1] is cache_me.CACHE_MISS ]
-
+    
     preload = {}
     talks = models.Talk.objects\
         .filter(id__in=missing)
+    talk_id = list(talks.values_list('id', flat=True))
+
     speakers_data = models.TalkSpeaker.objects\
-        .filter(talk__in=talks.values('id'))\
+        .filter(talk__in=talk_id)\
         .values('talk', 'speaker', 'helper',)
     tags = models.ConferenceTaggedItem.objects\
         .filter(
             content_type=ContentType.objects.get_for_model(models.Talk),
-            object_id__in=talks.values('id')
+            object_id__in=talk_id
         )\
         .values('object_id', 'tag__name')
     abstracts = models.MultilingualContent.objects\
         .filter(
             content_type=ContentType.objects.get_for_model(models.Talk),
-            object_id__in=talks.values('id')
+            object_id__in=talk_id
         )
     comment_list = comments.get_model().objects\
         .filter(content_type__app_label='conference', content_type__model='talk')\
-        .filter(object_pk__in=talks.values('id'), is_public=True)
+        .filter(object_pk__in=talk_id, is_public=True)
     events = models.Event.objects\
         .filter(talk__in=missing)\
         .values('talk', 'id')

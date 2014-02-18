@@ -515,7 +515,8 @@ class TalkManager(models.Manager):
         talk.training_available = training_available
         talk.type = type
         cursor = connection.cursor()
-        cursor.execute('BEGIN EXCLUSIVE TRANSACTION')
+        # FIXME: Use *real* transaction handling
+        cursor.execute('BEGIN TRANSACTION')
         try:
             count = 0
             check = slug
