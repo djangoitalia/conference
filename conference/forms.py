@@ -171,7 +171,6 @@ class SubmissionForm(forms.Form):
         label=_('Talk abstract'),
         help_text=_('<p>Please enter a short description of the talk you are submitting. Be sure to includes the goals of your talk and any prerequisite required to fully understand it.</p><p>Suggested size: two or three paragraphs.</p>'),
         widget=forms.Textarea(),)
-    tags = TagField(widget=TagWidget)
 
     def __init__(self, user, *args, **kwargs):
         try:
@@ -228,7 +227,8 @@ class SubmissionForm(forms.Form):
         talk.qa_duration = data.get('qa_duration', 0)
         talk.save()
         talk.setAbstract(data['abstract'])
-        talk.tags.set(*data['tags'])
+        if 'tags' in data:
+            talk.tags.set(*data['tags'])
 
         from conference.listeners import new_paper_submission
         new_paper_submission.send(sender=speaker, talk=talk)
@@ -261,7 +261,7 @@ class TalkForm(forms.ModelForm):
 
     class Meta:
         model = models.Talk
-        fields = ('title', 'duration', 'qa_duration', 'type', 'language', 'level', 'slides', 'teaser_video', 'tags')
+        fields = ('title', 'duration', 'qa_duration', 'type', 'language', 'level', 'slides', 'teaser_video')
         widgets = {
             'tags': TagWidget,
         }
