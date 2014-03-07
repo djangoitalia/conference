@@ -16,7 +16,7 @@ def _new_paper_email(sender, **kw):
     Invia una mail agli organizzatori con i dettagli sul paper presentato.
     """
     tlk = kw['talk']
-    subject = '[new paper] "%s %s" - %s' % (sender.user.first_name, sender.user.last_name, tlk.title)
+    subject = '[new paper][%s] "%s %s" - %s' % (tlk.conference, sender.user.first_name, sender.user.last_name, tlk.title)
     body = '''
 Title: %(title)s
 Duration: %(duration)s (includes Q&A)
@@ -26,7 +26,7 @@ Type: %(type)s
 
 Abstract: %(abstract)s
 
-Tags: %(tags)s
+%(tags)s
 ''' % {
     'title': tlk.title,
     'duration': tlk.duration,
@@ -34,7 +34,7 @@ Tags: %(tags)s
     'language': tlk.language,
     'abstract': getattr(tlk.getAbstract(), 'body', ''),
     'type': tlk.get_type_display(),
-    'tags': [ x.name for x in tlk.tags.all() ],
+    'tags': "Tags: %s" % ", ".join([ x.name for x in tlk.tags.all() ]) if tlk.tags.count() else "",
     }
     from conference.utils import send_email
     send_email(
