@@ -4,6 +4,7 @@ import functools
 import os.path
 import urllib
 from decimal import Decimal
+from django.utils.safestring import mark_safe
 
 from conference import dataaccess
 from conference import models
@@ -517,7 +518,7 @@ def paper_submission(request):
                 speaker = request.user.speaker
             else:
                 talk = form.save(speaker=speaker)
-            messages.info(request, 'Your talk has been submitted, thank you!')
+            messages.info(request, mark_safe('<i class="fa fa-check"></i> Your talk has been submitted, thank you!'))
             return HttpResponseRedirectSeeOther(reverse('conference-myself-profile'))
     else:
         if not proposed:
