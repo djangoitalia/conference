@@ -8,7 +8,7 @@ from django.forms import widgets
 from django.forms.util import flatatt
 from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.util import label_for_field, help_text_for_field
 
 from conference import models
