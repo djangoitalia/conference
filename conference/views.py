@@ -200,7 +200,6 @@ def talk(request, slug, talk, full_access, talk_form=None):
             data['qa_duration'] = talk.qa_duration
             data['language'] = talk.language
             data['type'] = talk.type
-            data['tags'] = ','.join([ x.name for x in talk.tags.all() ])
         form = talk_form(data=data, files=request.FILES, instance=talk)
         if not conf.cfp() and not data['tags'] and 'tags' in form.fields:
             # Il CFP e' chiuso e stiamo editando un talk senza tags, la cosa
