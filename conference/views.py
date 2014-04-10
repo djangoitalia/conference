@@ -201,7 +201,7 @@ def talk(request, slug, talk, full_access, talk_form=None):
             data['language'] = talk.language
             data['type'] = talk.type
         form = talk_form(data=data, files=request.FILES, instance=talk)
-        if not conf.cfp() and not data['tags'] and 'tags' in form.fields:
+        if not conf.cfp() and 'tags' in form.fields and not data['tags']:
             # Il CFP e' chiuso e stiamo editando un talk senza tags, la cosa
             # non e' normalmente possibile visto che i tags sono richiesti;
             # stiamo probabilmente editando un talk inserito tramite admin, se
