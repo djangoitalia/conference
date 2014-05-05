@@ -562,7 +562,8 @@ class TalkAdmin(MultiLingualAdminContent):
         writer = csv.writer(buff)
         for t in queryset:
             for s in t.get_all_speakers():
-                writer.writerow((t.status, t.title.encode('utf-8'), s.name.encode('utf-8'), s.user.email.encode('utf-8') if s.user else ''))
+                name = "%s" % s.user
+                writer.writerow((t.status, t.title.encode('utf-8'), name.encode('utf-8'), s.user.email.encode('utf-8') if s.user else ''))
         response = http.HttpResponse(buff.getvalue(), mimetype="text/csv")
         response['Content-Disposition'] = 'attachment; filename=speakers.csv'
         return response
